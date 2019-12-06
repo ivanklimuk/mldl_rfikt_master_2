@@ -17,3 +17,13 @@ tf_records:
     --val_annotations_file=../../data_coco/val/annotations.json \
     --testdev_annotations_file=../../data_coco/test/annotations.json \
     --output_dir=../../data_tf_records
+
+train:
+	cd ./models/research; \
+	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
+	python object_detection/model_main.py \
+    --pipeline_config_path=../../choco/model/train.config \
+    --model_dir=../../choco \
+    --num_train_steps=50000 \
+    --sample_1_of_n_eval_examples=1 \
+    --alsologtostderr
