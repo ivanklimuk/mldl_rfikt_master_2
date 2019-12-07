@@ -7,3 +7,6 @@
 build/
 models/
 data_*/
+*.ckpt.data*
+*.ckpt.index
+*graph.pb
