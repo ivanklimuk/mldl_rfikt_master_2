@@ -2,28 +2,56 @@ install:
 	python ./models/research/setup.py install
 
 coco:
-	python labelme2coco.py --labels ./labels.txt --input_dir ./data_raw/train/annotations --input_dir_images ./data_raw/train/images --output_dir ./data_coco/train
-	python labelme2coco.py --labels ./labels.txt --input_dir ./data_raw/test/annotations --input_dir_images ./data_raw/test/images --output_dir ./data_coco/test
-	python labelme2coco.py --labels ./labels.txt --input_dir ./data_raw/val/annotations --input_dir_images ./data_raw/val/images --output_dir ./data_coco/val
+	python labelme2coco.py --labels ./data/labels.txt --input_dir ./data/data_raw/train/annotations --input_dir_images ./data/data_raw/train/images --output_dir ./data/data_coco/train
+	python labelme2coco.py --labels ./data/labels.txt --input_dir ./data/data_raw/test/annotations --input_dir_images ./data/data_raw/test/images --output_dir ./data/data_coco/test
+	python labelme2coco.py --labels ./data/labels.txt --input_dir ./data/data_raw/val/annotations --input_dir_images ./data/data_raw/val/images --output_dir ./data/data_coco/val
 
-tf_records:
+csv:
+	python labelme2csv.py --labels ./data/labels.txt --input_dir ./data/data_raw/train/annotations --input_dir_images ./data/data_raw/train/images --output_dir ./data/data_csv/train
+	python labelme2csv.py --labels ./data/labels.txt --input_dir ./data/data_raw/test/annotations --input_dir_images ./data/data_raw/test/images --output_dir ./data/data_csv/test
+	python labelme2csv.py --labels ./data/labels.txt --input_dir ./data/data_raw/val/annotations --input_dir_images ./data/data_raw/val/images --output_dir ./data/data_csv/val
+
+tf_records_coco:
 	cd ./models/research; \
 	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
 	python object_detection/dataset_tools/create_coco_tf_record.py --logtostderr \
-    --train_image_dir=../../data_coco/train \
-    --val_image_dir=../../data_coco/val \
-    --test_image_dir=../../data_coco/test \
-    --train_annotations_file=../../data_coco/train/annotations.json \
-    --val_annotations_file=../../data_coco/val/annotations.json \
-    --testdev_annotations_file=../../data_coco/test/annotations.json \
-    --output_dir=../../data_tf_records
+    --train_image_dir=../../data/data_coco/train \
+    --val_image_dir=../../data/data_coco/val \
+    --test_image_dir=../../data/data_coco/test \
+    --train_annotations_file=../../data/data_coco/train/annotations.json \
+    --val_annotations_file=../../data/data_coco/val/annotations.json \
+    --testdev_annotations_file=../../data/data_coco/test/annotations.json \
+    --output_dir=../../data/data_tf_records_coco
 
-train:
+tf_records_csv:
+	cd ./models/research; \
+	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
+	python object_detection/dataset_tools/create_csv_tf_record.py \
+	--csv_input=../../data/data_csv/train/annotations.csv \
+	--image_dir=../../data/data_csv/train/images \
+	--output_path=../../data/data_tf_records_csv/csv_train.record; \
+	python object_detection/dataset_tools/create_csv_tf_record.py \
+	--csv_input=../../data/data_csv/val/annotations.csv \
+	--image_dir=../../data/data_csv/val/images \
+	--output_path=../../data/data_tf_records_csv/csv_val.record
+
+train_json:
 	cd ./models/research; \
 	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
 	python object_detection/model_main.py \
-    --pipeline_config_path=../../choco/model/train.config \
+    --pipeline_config_path=../../choco/model/train_json.config \
     --model_dir=../../choco \
     --num_train_steps=50000 \
-    --sample_1_of_n_eval_examples=1 \
     --alsologtostderr
+
+train_csv:
+	cd ./models/research; \
+	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
+	python object_detection/model_main.py \
+    --pipeline_config_path=../../choco/model/train_csv.config \
+    --model_dir=../../choco \
+    --num_train_steps=50000 \
+    --alsologtostderr
+
+train:
+	$(MAKE) train_json

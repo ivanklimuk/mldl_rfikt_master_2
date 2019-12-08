@@ -124,15 +124,15 @@ def main():
                 annotations.append({
                     'filename': data['images'][i]['file_name'].split('/')[-1],
                     'class': label.split('-')[0],
-                    'height': data['images'][i]['height'],
                     'width': data['images'][i]['width'],
+                    'height': data['images'][i]['height'],
                     'xmin': xmin,
                     'ymin': ymin,
                     'xmax': xmax,
                     'ymax': ymax,
                 })
     df = pd.DataFrame(annotations, columns=[
-        'filename', 'class', 'height', 'width', 'xmin', 'ymin', 'xmax', 'ymax'
+        'filename', 'class', 'width', 'height', 'xmin', 'ymin', 'xmax', 'ymax'
     ])
     df.to_csv(out_ann_file, index=False, header=True)
 

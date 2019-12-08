@@ -136,18 +136,25 @@ def main():
 
             mask = np.asfortranarray(mask.astype(np.uint8))
             mask = pycocotools.mask.encode(mask)
-            area = float(pycocotools.mask.area(mask))
-            bbox = pycocotools.mask.toBbox(mask).flatten().tolist()
-
-            data['annotations'].append(dict(
-                id=len(data['annotations']),
-                image_id=image_id,
-                category_id=cls_id,
-                segmentation=segmentations[label],
-                area=area,
-                bbox=bbox,
-                iscrowd=0,
-            ))
+            # area = float(pycocotools.mask.area(mask))
+            # bbox = pycocotools.mask.toBbox(mask).flatten().tolist()
+            for segmentation in segmentations[label]:
+                bbox = [
+                    segmentation[0],  # xmin
+                    segmentation[1],  # ymin
+                    segmentation[2] - segmentation[0],  # width
+                    segmentation[3] - segmentation[1],  # height
+                ]
+                area = bbox[2] * bbox[3]
+                data['annotations'].append(dict(
+                    id=len(data['annotations']),
+                    image_id=image_id,
+                    category_id=cls_id,
+                    # segmentation=[segmentation],
+                    area=area,
+                    bbox=bbox,
+                    iscrowd=0,
+                ))
 
     with open(out_ann_file, 'w') as f:
         json.dump(data, f)
