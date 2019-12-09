@@ -6,6 +6,7 @@
 *.egg-info/
 build/
 models/*
+!models/research/object_detection/*
 data/*
 !data/.gitkeep
 choco/*
