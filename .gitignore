@@ -5,9 +5,11 @@
 .vscode/
 *.egg-info/
 build/
-models/
-data_*/
-choco/
+models/*
+data/*
+!data/.gitkeep
+choco/*
+!choco/model/
 *.ckpt.data*
 *.ckpt.index
 *graph.pb

@@ -35,11 +35,11 @@ tf_records_csv:
 	--image_dir=../../data/data_csv/val/images \
 	--output_path=../../data/data_tf_records_csv/csv_val.record
 
-train_json:
+train_coco:
 	cd ./models/research; \
 	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
 	python object_detection/model_main.py \
-    --pipeline_config_path=../../choco/model/train_json.config \
+    --pipeline_config_path=../../choco/model/train_coco.config \
     --model_dir=../../choco \
     --num_train_steps=50000 \
     --alsologtostderr
@@ -54,4 +54,4 @@ train_csv:
     --alsologtostderr
 
 train:
-	$(MAKE) train_json
+	$(MAKE) train_coco
