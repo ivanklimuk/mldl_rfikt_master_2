@@ -104,8 +104,8 @@ def main():
             license=0,
             url=None,
             file_name=osp.relpath(out_img_file, osp.dirname(out_ann_file)),
-            height=img.shape[0],
             width=img.shape[1],
+            height=img.shape[0],
             date_captured=None,
             id=image_id,
         ))
@@ -139,23 +139,29 @@ def main():
             # area = float(pycocotools.mask.area(mask))
             # bbox = pycocotools.mask.toBbox(mask).flatten().tolist()
             for segmentation in segmentations[label]:
+                xmin = min(segmentation[0], segmentation[2])
+                xmax = max(segmentation[0], segmentation[2])
+                ymin = min(segmentation[1], segmentation[3])
+                ymax = max(segmentation[1], segmentation[3])
+                width = (xmax - xmin)
+                height = (ymax - ymin)
                 bbox = [
-                    segmentation[0],  # xmin
-                    segmentation[1],  # ymin
-                    segmentation[2] - segmentation[0],  # width
-                    segmentation[3] - segmentation[1],  # height
+                    xmin,
+                    ymin,
+                    width,
+                    height,
                 ]
                 area = bbox[2] * bbox[3]
                 data['annotations'].append(dict(
                     id=len(data['annotations']),
                     image_id=image_id,
                     category_id=cls_id,
-                    # segmentation=[segmentation],
                     area=area,
                     bbox=bbox,
                     iscrowd=0,
                 ))
 
+    print(f'Total annotations: {len(data["annotations"])}')
     with open(out_ann_file, 'w') as f:
         json.dump(data, f)
 

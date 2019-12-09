@@ -35,6 +35,12 @@ tf_records_csv:
 	--image_dir=../../data/data_csv/val/images \
 	--output_path=../../data/data_tf_records_csv/csv_val.record
 
+delete_coco:
+	rm data/data_tf_records_coco/coco_* | true
+	rm -r data/data_coco/train | true
+	rm -r data/data_coco/test | true
+	rm -r data/data_coco/val | true
+
 train_coco:
 	cd ./models/research; \
 	export PYTHONPATH=$$PYTHONPATH:`pwd`:`pwd`/slim; \
