@@ -12,14 +12,6 @@ import sys
 import numpy as np
 import PIL.Image
 
-import labelme
-
-try:
-    import pycocotools.mask
-except ImportError:
-    print('Please install pycocotools:\n\n    pip install pycocotools\n')
-    sys.exit(1)
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -110,34 +102,24 @@ def main():
             id=image_id,
         ))
 
-        masks = {}                                     # for area
+        labels = []                                     # for area
         segmentations = collections.defaultdict(list)  # for segmentation
         for shape in label_data['shapes']:
             points = shape['points']
             label = shape['label']
-            shape_type = shape.get('shape_type', None)
-            mask = labelme.utils.shape_to_mask(
-                img.shape[:2], points, shape_type
-            )
 
-            if label in masks:
-                masks[label] = masks[label] | mask
-            else:
-                masks[label] = mask
+            if label not in labels:
+                labels.append(label)
 
             points = np.asarray(points).flatten().tolist()
             segmentations[label].append(points)
 
-        for label, mask in masks.items():
+        for label in labels:
             cls_name = label.split('-')[0]
             if cls_name not in class_name_to_id:
                 continue
             cls_id = class_name_to_id[cls_name]
 
-            mask = np.asfortranarray(mask.astype(np.uint8))
-            mask = pycocotools.mask.encode(mask)
-            # area = float(pycocotools.mask.area(mask))
-            # bbox = pycocotools.mask.toBbox(mask).flatten().tolist()
             for segmentation in segmentations[label]:
                 xmin = min(segmentation[0], segmentation[2])
                 xmax = max(segmentation[0], segmentation[2])
@@ -161,7 +143,7 @@ def main():
                     iscrowd=0,
                 ))
 
-    print(f'Total annotations: {len(data["annotations"])}')
+    print('Total annotations: {}'.format(len(data["annotations"])))
     with open(out_ann_file, 'w') as f:
         json.dump(data, f)
 
