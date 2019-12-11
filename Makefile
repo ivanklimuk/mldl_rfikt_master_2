@@ -47,7 +47,6 @@ train_coco:
 	python object_detection/model_main.py \
     --pipeline_config_path=../../choco/model/train_coco.config \
     --model_dir=../../choco \
-    --num_train_steps=50000 \
     --alsologtostderr
 
 train_csv:
@@ -56,7 +55,6 @@ train_csv:
 	python object_detection/model_main.py \
     --pipeline_config_path=../../choco/model/train_csv.config \
     --model_dir=../../choco \
-    --num_train_steps=50000 \
     --alsologtostderr
 
 train:
