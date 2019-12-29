@@ -25,7 +25,7 @@ For this the raw data and the annotations had to be first converted to either cs
 
 - **Model**
 
-The model that has been trained for detection was a pretrained (Faster RCNN Inception V2)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md]. It was trained on ~140 images, tested and then validated on ~30 images each. The complete training configuration with the optimizer, learning rate schedule, augmentation options and other parameters settings. can be found [here](https://github.com/ivanklimuk/mldl_rfikt_master_2/blob/master/choco/model/train_coco.config).
+The model that has been trained for detection was a pretrained [Faster RCNN Inception V2](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md). It was trained on ~140 images, tested and then validated on ~30 images each. The complete training configuration with the optimizer, learning rate schedule, augmentation options and other parameters settings. can be found [here](https://github.com/ivanklimuk/mldl_rfikt_master_2/blob/master/choco/model/train_coco.config).
 
 After 95k training steps the model achieved *mean Average Precision* of 0.8 on test the test images (with IoU=0.75). Here are some examples of the detected choco bars:
 
