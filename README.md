@@ -29,9 +29,9 @@ The model that has been trained for detection was a pretrained (Faster RCNN Ince
 
 After 95k training steps the model achieved *mean Average Precision* of 0.8 on test the test images (with IoU=0.75). Here are some examples of the detected choco bars:
 
-![example1](example1.jpg)
+![example1](example1.png)
 
-![example2](example2.jpg)
+![example2](example2.png)
 
 ### Usage
 
