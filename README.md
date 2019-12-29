@@ -29,3 +29,32 @@ The model that has been trained for detection was a pretrained (Faster RCNN Ince
 
 After 95k training steps the model achieved *mean Average Precision* of 0.8 on test the test images (with IoU=0.75). Here are some examples of the detected choco bars:
 
+![example1](example1.jpg)
+
+![example2](example2.jpg)
+
+### Usage
+
+In order to reproduce the results or to run the scripts with a different dataset you can use the following commands
+
+1. Convert the raw images and annotations to coco format (assumes that the data is stored in the same way as in this repo):
+```
+$ make coco
+```
+
+2. Convert the coco formatted data to a set of sharded tfrecords files:
+```
+$ make tf_records_coco
+```
+
+3. Train the model from the predefined config using the tfrecords from step 2:
+```
+$ make train
+```
+
+The training process can be visualized using tensorboard:
+```
+$ tensorboard --logdir=./choco
+```
+
+CSV formatted data usage is WIP.
